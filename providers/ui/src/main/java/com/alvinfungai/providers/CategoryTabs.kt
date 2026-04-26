@@ -23,7 +23,7 @@ fun CategoryTabs(
     onCategoryChange: (String) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
-    val categories = listOf("All", "Cleaning", "Repair", "Design", "Tech", "Automotive", "Mobile", "Events", "Catering", "Education", "Training")
+    val categories = listOf("All", "Cleaning", "Repair", "Design", "Tech", "Construction", "Automotive", "Mobile", "Events", "Catering", "Education", "Training")
     
     // If the selected category is not in the predefined list (e.g., a specialty tag),
     // we display it as a selected chip alongside the others.
