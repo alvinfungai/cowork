@@ -1,19 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.google.maps.secrets)
 }
 
 android {
     namespace = "com.alvinfungai.cowork"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.alvinfungai.cowork"
@@ -44,6 +41,25 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":app:core"))
+
+    implementation(project(":users:ui"))
+    implementation(project(":users:domain"))
+    implementation(project(":users:data"))
+
+    implementation(project(":providers:ui"))
+    implementation(project(":providers:domain"))
+    implementation(project(":providers:data"))
+
+    implementation(project(":bookings:ui"))
+    implementation(project(":bookings:domain"))
+    implementation(project(":bookings:data"))
+
+    implementation(project(":reviews:ui"))
+    implementation(project(":reviews:domain"))
+    implementation(project(":reviews:data"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -80,9 +96,18 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.storage.ktx)
 
     // Coil
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    // Material Symbols
+    implementation(libs.androidx.compose.material.icons.extended)
+
+    // Compose maps
+    implementation(libs.maps.compose)
+    implementation(libs.maps.compose.utils) // maps clustering
 }

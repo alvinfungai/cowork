@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="CHOOSE_PER_TEST" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app/core" />
+            <option value="$PROJECT_DIR$/bookings" />
+            <option value="$PROJECT_DIR$/bookings/data" />
+            <option value="$PROJECT_DIR$/bookings/domain" />
+            <option value="$PROJECT_DIR$/bookings/ui" />
+            <option value="$PROJECT_DIR$/providers" />
+            <option value="$PROJECT_DIR$/providers/data" />
+            <option value="$PROJECT_DIR$/providers/domain" />
+            <option value="$PROJECT_DIR$/providers/ui" />
+            <option value="$PROJECT_DIR$/reviews" />
+            <option value="$PROJECT_DIR$/reviews/data" />
+            <option value="$PROJECT_DIR$/reviews/domain" />
+            <option value="$PROJECT_DIR$/reviews/ui" />
+            <option value="$PROJECT_DIR$/services" />
+            <option value="$PROJECT_DIR$/services/data" />
+            <option value="$PROJECT_DIR$/services/domain" />
+            <option value="$PROJECT_DIR$/services/ui" />
+            <option value="$PROJECT_DIR$/users" />
+            <option value="$PROJECT_DIR$/users/data" />
+            <option value="$PROJECT_DIR$/users/domain" />
+            <option value="$PROJECT_DIR$/users/ui" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
