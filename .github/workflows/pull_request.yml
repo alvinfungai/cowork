@@ -20,6 +20,9 @@ jobs:
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
 
+      - name: Initialize local.properties
+        run: echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
+
       - name: Run unit tests
         run: ./gradlew clean testDebug
 
