@@ -56,6 +56,10 @@ jobs:
         run: |
           echo "${{ secrets.LOCAL_PROPERTIES_BASE64 }}" | base64 --decode > local.properties
 
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.COWORK_KEYSTORE }}" | base64 --decode > app/cowork-keystore.jks
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
