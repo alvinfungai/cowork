@@ -23,9 +23,11 @@ jobs:
       - name: Initialize local.properties
         run: echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
 
-
       - name: Decode Google Services JSON
         run: printf "%s" "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
+
+      - name: Validate JSON
+        run: jq . app/google-services.json
 
       - name: Run unit tests
         run: ./gradlew clean testDebug --stacktrace
