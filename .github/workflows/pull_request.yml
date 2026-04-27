@@ -30,4 +30,4 @@ jobs:
         run: jq . app/google-services.json
 
       - name: Run unit tests
-        run: ./gradlew clean testDebug --stacktrace
+        run: ./gradlew clean testDebug
