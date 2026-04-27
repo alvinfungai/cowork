@@ -22,9 +22,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("cowork-keystore.jks")
+            // Prefers environment variables (CI), falls back to local.properties
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: project.findProperty("RELEASE_KEYSTORE_PASSWORD")?.toString()
+            keyAlias = System.getenv("COWORK_ALIAS") ?: project.findProperty("RELEASE_KEY_ALIAS")?.toString()
+            keyPassword = System.getenv("ALIAS_KEY_PASSWORD") ?: project.findProperty("RELEASE_KEY_PASSWORD")?.toString()
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

@@ -65,17 +65,12 @@ jobs:
           gradlePath: app/build.gradle.kts
           versionCode: ${{ github.run_number }}
 
-      - name: Assemble Release Bundle
+      - name: Assemble and Sign Release Bundle
         run: ./gradlew bundleRelease
-
-      - name: Sign Release Bundle
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.COWORK_KEYSTORE }}
-          keystorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          alias: ${{ secrets.COWORK_ALIAS }}
-          keyPassword: ${{ secrets.ALIAS_KEY_PASSWORD }}
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          COWORK_ALIAS: ${{ secrets.COWORK_ALIAS }}
+          ALIAS_KEY_PASSWORD: ${{ secrets.ALIAS_KEY_PASSWORD }}
 
       - name: Setup Authorization with Google Play Store
         run: |
