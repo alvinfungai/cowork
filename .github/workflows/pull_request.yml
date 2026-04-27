@@ -29,5 +29,8 @@ jobs:
       - name: Validate JSON
         run: jq . app/google-services.json
 
+      - name: Check file size
+        run: ls -l app/google-services.json
+
       - name: Run unit tests
         run: ./gradlew clean testDebug
