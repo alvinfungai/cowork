@@ -24,7 +24,8 @@ jobs:
           echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
 
       - name: Decode Local Properties
-        run: echo "${{ secrets.LOCAL_PROPERTIES_BASE64 }}" | base64 --decode > local.properties
+        run: |
+          echo "${{ secrets.LOCAL_PROPERTIES_BASE64 }}" | base64 --decode > local.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -52,7 +53,8 @@ jobs:
           echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
 
       - name: Decode Local Properties
-        run: echo "${{ secrets.LOCAL_PROPERTIES_BASE64 }}" | base64 --decode > local.properties
+        run: |
+          echo "${{ secrets.LOCAL_PROPERTIES_BASE64 }}" | base64 --decode > local.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -76,7 +78,8 @@ jobs:
           keyPassword: ${{ secrets.ALIAS_KEY_PASSWORD }}
 
       - name: Setup Authorization with Google Play Store
-        run: echo "${{ secrets.PLAY_AUTH_JSON }}" > service_account.json
+        run: |
+          echo "${{ secrets.PLAY_AUTH_JSON }}" > service_account.json
 
       - name: Deploy Bundle To Google Play Store
         uses: r0adkll/upload-google-play@v1.1.3
