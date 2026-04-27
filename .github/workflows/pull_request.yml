@@ -27,7 +27,4 @@ jobs:
         run: echo -n "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 --decode > app/google-services.json
 
       - name: Run unit tests
-        run: ./gradlew clean testDebug
-
-      - name: Run unit tests
-        run: ./gradlew clean testDebug
+        run: ./gradlew clean testDebug --stacktrace
