@@ -58,7 +58,16 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.COWORK_KEYSTORE }}" | base64 --decode > app/cowork-keystore.jks
+          # Use -di to ignore non-alphabet characters like newlines
+          echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 -di > app/cowork-keystore.jks
+
+      - name: Verify Keystore File
+        run: |
+          if [ ! -s app/cowork-keystore.jks ]; then
+            echo "Keystore file is empty!"
+            exit 1
+          fi
+          ls -l app/cowork-keystore.jks
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -72,9 +81,9 @@ jobs:
       - name: Assemble and Sign Release Bundle
         run: ./gradlew bundleRelease
         env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          COWORK_ALIAS: ${{ secrets.COWORK_ALIAS }}
-          ALIAS_KEY_PASSWORD: ${{ secrets.ALIAS_KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          COWORK_ALIAS: ${{ secrets.RELEASE_ALIAS }}
+          ALIAS_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS }}
 
       - name: Setup Authorization with Google Play Store
         run: |

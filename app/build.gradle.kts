@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -22,13 +24,18 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    val keystorePropertiesFile = rootProject.file("local.properties")
+    val keystoreProperties = Properties()
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(keystorePropertiesFile.inputStream())
+    }
+
     signingConfigs {
         create("release") {
             storeFile = file("cowork-keystore.jks")
-            // Prefers environment variables (CI), falls back to local.properties
-            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: project.findProperty("RELEASE_KEYSTORE_PASSWORD")?.toString()
-            keyAlias = System.getenv("COWORK_ALIAS") ?: project.findProperty("RELEASE_KEY_ALIAS")?.toString()
-            keyPassword = System.getenv("ALIAS_KEY_PASSWORD") ?: project.findProperty("RELEASE_KEY_PASSWORD")?.toString()
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: keystoreProperties.getProperty("RELEASE_KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("COWORK_ALIAS") ?: keystoreProperties.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword = System.getenv("ALIAS_KEY_PASSWORD") ?: keystoreProperties.getProperty("RELEASE_KEY_PASSWORD")
         }
     }
 
