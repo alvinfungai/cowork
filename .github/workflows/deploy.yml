@@ -78,12 +78,13 @@ jobs:
           gradlePath: app/build.gradle.kts
           versionCode: ${{ github.run_number }}
 
-      - name: Assemble and Sign Release Bundle
-        run: ./gradlew bundleRelease --stacktrace
+      - name: Assemble and Sign Release
+        # Generate both AAB and APK (for registration)
+        run: ./gradlew bundleRelease assembleRelease --stacktrace
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-          RELEASE_ALIAS: ${{ secrets.RELEASE_ALIAS }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_ALIAS }}
 
       - name: Setup Authorization with Google Play Store
         run: |
