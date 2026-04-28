@@ -79,7 +79,7 @@ jobs:
           versionCode: ${{ github.run_number }}
 
       - name: Assemble and Sign Release Bundle
-        run: ./gradlew bundleRelease
+        run: ./gradlew bundleRelease --stacktrace
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_ALIAS: ${{ secrets.RELEASE_ALIAS }}
