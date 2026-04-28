@@ -32,7 +32,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("cowork-keystore.jks")
+            storeFile = file("${project.rootDir}/app/cowork-keystore.jks")
             storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: keystoreProperties.getProperty("RELEASE_KEYSTORE_PASSWORD")
             keyAlias = System.getenv("RELEASE_KEY_ALIAS") ?: keystoreProperties.getProperty("RELEASE_KEY_ALIAS")
             keyPassword = System.getenv("RELEASE_KEY_PASSWORD") ?: keystoreProperties.getProperty("RELEASE_KEY_PASSWORD")
