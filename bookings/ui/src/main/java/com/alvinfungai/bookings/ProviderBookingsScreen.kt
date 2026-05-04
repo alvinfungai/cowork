@@ -209,7 +209,7 @@ fun ProviderBookingItem(
                 ) {
                     Column {
                         Text(
-                            text = "Duration: ${String.format("%.1f", hours)} hrs",
+                            text = "Duration: ${String.format(Locale.getDefault(), "%.1f", hours)} hrs",
                             style = MaterialTheme.typography.bodyMedium
                         )
                         if (roundedMinutes > durationMinutes) {

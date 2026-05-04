@@ -1,4 +1,4 @@
-package com.alvinfungai.cowork
+package com.alvinfungai.coworkapp
 
 import org.junit.Test
 

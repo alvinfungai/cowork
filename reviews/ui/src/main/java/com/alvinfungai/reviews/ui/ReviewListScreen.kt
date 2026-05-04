@@ -1,7 +1,6 @@
 package com.alvinfungai.reviews.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,12 +17,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.material.icons.filled.StarOutline
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -44,7 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alvinfungai.reviews.domain.Review
 import java.text.SimpleDateFormat
@@ -201,7 +198,7 @@ fun ReviewItem(review: Review) {
                 )
             }
             
-            RatingBar(rating = review.rating.toDouble(), size = 14.dp)
+            RatingBar(rating = review.rating, size = 14.dp)
         }
 
         if (review.comment.isNotBlank()) {
@@ -228,7 +225,7 @@ fun RatingBar(
             val starIndex = index + 1
             val icon = when {
                 rating >= starIndex -> Icons.Filled.Star
-                rating >= starIndex - 0.5 -> Icons.Filled.StarHalf
+                rating >= starIndex - 0.5 -> Icons.AutoMirrored.Filled.StarHalf
                 else -> Icons.Filled.StarOutline
             }
             Icon(

@@ -1,9 +1,7 @@
 package com.alvinfungai.providers
 
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -126,27 +124,22 @@ fun ExploreScreen(
                     )
                 }
                 is ExploreUiState.Success -> {
-                    AnimatedVisibility(
-                        visible = isMapView,
-                        enter = fadeIn(),
-                        exit = fadeOut()
-                    ) {
-                        ExploreMapView(
-                            providers = uiState.providers,
-                            onProviderClick = onProviderClick,
-                            cameraPosition = cameraPosition
-                        )
-                    }
-                    
-                    AnimatedVisibility(
-                        visible = !isMapView,
-                        enter = fadeIn(),
-                        exit = fadeOut()
-                    ) {
-                        ExploreListView(
-                            providers = uiState.providers,
-                            onProviderClick = onProviderClick
-                        )
+                    Crossfade(
+                        targetState = isMapView,
+                        label = "ExploreViewSwitch"
+                    ) { showMap ->
+                        if (showMap) {
+                            ExploreMapView(
+                                providers = uiState.providers,
+                                onProviderClick = onProviderClick,
+                                cameraPosition = cameraPosition
+                            )
+                        } else {
+                            ExploreListView(
+                                providers = uiState.providers,
+                                onProviderClick = onProviderClick
+                            )
+                        }
                     }
                 }
             }

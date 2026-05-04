@@ -19,14 +19,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Business
-import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Settings

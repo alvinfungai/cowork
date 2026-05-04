@@ -1,4 +1,4 @@
-package com.alvinfungai.cowork.di
+package com.alvinfungai.coworkapp.di
 
 import com.alvinfungai.reviews.domain.AddReviewUseCase
 import com.alvinfungai.reviews.domain.GetReviewsForProviderUseCase

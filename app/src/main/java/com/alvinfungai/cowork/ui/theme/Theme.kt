@@ -1,4 +1,4 @@
-package com.alvinfungai.cowork.ui.theme
+package com.alvinfungai.coworkapp.ui.theme
 
 import android.app.Activity
 import android.os.Build

@@ -23,8 +23,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Business
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -52,6 +55,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.alvinfungai.app.core.CurrencyUtils
 import com.alvinfungai.providers.domain.model.ServiceProvider
+import com.alvinfungai.providers.domain.model.WorkHistory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -139,7 +146,7 @@ fun ProviderDetailsContent(
             if (!provider.imageUrl.isNullOrEmpty()) {
                 val imageUrlWithTimestamp = "${provider.imageUrl}?t=${System.currentTimeMillis()}"
                 Log.d("COIL_DEBUG", "Loading URL in Details: $imageUrlWithTimestamp")
-                
+
                 AsyncImage(
                     model = imageUrlWithTimestamp,
                     contentDescription = null,
@@ -209,10 +216,10 @@ fun ProviderDetailsContent(
 
             // Rating section
             Surface(
-                onClick = { 
+                onClick = {
                     // USE CASE: Reviews are keyed by the provider's Firebase UID (userId) in Firestore.
                     // We must pass provider.userId here, not the Supabase UUID (provider.id).
-                    onViewReviewsClick(provider.userId) 
+                    onViewReviewsClick(provider.userId)
                 },
                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
                 shape = MaterialTheme.shapes.large,
@@ -317,9 +324,9 @@ fun ProviderDetailsContent(
                 }
             } else {
                 Button(
-                    onClick = { 
+                    onClick = {
                         // USE CASE: For bookings, we also use the provider's Firebase UID.
-                        onBookClick(provider.userId) 
+                        onBookClick(provider.userId)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

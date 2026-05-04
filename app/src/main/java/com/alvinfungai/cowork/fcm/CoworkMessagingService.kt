@@ -1,4 +1,4 @@
-package com.alvinfungai.cowork.fcm
+package com.alvinfungai.coworkapp.fcm
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,7 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.alvinfungai.cowork.MainActivity
+import com.alvinfungai.coworkapp.MainActivity
 import com.alvinfungai.providers.domain.model.AppNotification
 import com.alvinfungai.providers.domain.model.NotificationType
 import com.alvinfungai.providers.domain.repository.NotificationRepository

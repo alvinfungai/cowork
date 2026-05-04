@@ -11,15 +11,15 @@ plugins {
 }
 
 android {
-    namespace = "com.alvinfungai.cowork"
+    namespace = "com.alvinfungai.coworkapp"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.alvinfungai.cowork"
+        applicationId = "com.alvinfungai.coworkapp"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -55,13 +55,13 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
 
     implementation(project(":app:core"))
-
     implementation(project(":users:ui"))
     implementation(project(":users:domain"))
     implementation(project(":users:data"))

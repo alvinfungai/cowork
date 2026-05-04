@@ -36,7 +36,7 @@ class ProviderBookingsViewModel @Inject constructor(
                         result.fold(
                             onSuccess = { provider ->
                                 if (provider != null) {
-                                    // We use provider.userId (Firebase UID) because Firestore bookings 
+                                    // We use provider.userId (Firebase UID) because Firestore bookings
                                     // are keyed by the Firebase UID, not the Supabase UUID.
                                     getBookingsForProviderUseCase(provider.userId)
                                 } else {

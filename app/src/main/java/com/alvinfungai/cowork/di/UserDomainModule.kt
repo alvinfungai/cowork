@@ -1,4 +1,4 @@
-package com.alvinfungai.cowork.di
+package com.alvinfungai.coworkapp.di
 
 import com.alvinfungai.users.domain.repository.AuthRepository
 import com.alvinfungai.users.domain.repository.UserRepository

@@ -16,9 +16,11 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":providers:domain"))
     implementation(libs.kotlinx.coroutines.core)
 
     // Ktx Serialization
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.javax.inject)
 }

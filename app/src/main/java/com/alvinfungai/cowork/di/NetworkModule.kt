@@ -1,4 +1,4 @@
-package com.alvinfungai.cowork.di
+package com.alvinfungai.coworkapp.di
 
 import com.alvinfungai.app.core.createSupabaseClient
 import com.google.firebase.auth.FirebaseAuth

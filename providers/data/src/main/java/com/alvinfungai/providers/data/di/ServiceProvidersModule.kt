@@ -10,6 +10,7 @@ import com.alvinfungai.providers.domain.usecase.GetServiceProviderDetailsUseCase
 import com.alvinfungai.providers.domain.usecase.GetServiceProvidersUseCase
 import com.alvinfungai.providers.domain.usecase.MarkNotificationAsReadUseCase
 import com.alvinfungai.providers.domain.usecase.RegisterServiceProviderUseCase
+import com.alvinfungai.providers.domain.usecase.SaveNotificationUseCase
 import com.alvinfungai.providers.domain.usecase.UpdateProviderLastActiveUseCase
 import com.alvinfungai.providers.domain.usecase.UpdateProviderRatingUseCase
 import com.alvinfungai.providers.domain.usecase.UpdateServiceProviderUseCase
@@ -81,5 +82,11 @@ object ServiceProvidersModule {
     @Provides
     fun provideUpdateProviderRatingUseCase(repository: ServiceProvidersRepository): UpdateProviderRatingUseCase {
         return UpdateProviderRatingUseCase(repository)
+    }
+
+
+    @Provides
+    fun provideSaveNotificationUseCase(repository: NotificationRepository): SaveNotificationUseCase {
+        return SaveNotificationUseCase(repository)
     }
 }

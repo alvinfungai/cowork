@@ -1,4 +1,4 @@
-package com.alvinfungai.cowork.navigation
+package com.alvinfungai.coworkapp.navigation
 
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController

@@ -49,6 +49,9 @@ class UserViewModel @Inject constructor(
     private val _updateResult = MutableStateFlow<Result<Unit>?>(null)
     val updateResult = _updateResult.asStateFlow()
 
+    private val _deleteAccountResult = MutableStateFlow<Result<Unit>?>(null)
+    val deleteAccountResult = _deleteAccountResult.asStateFlow()
+
     val isDarkMode: Flow<Boolean> = themePreferences.isDarkMode
 
 
@@ -152,5 +155,9 @@ class UserViewModel @Inject constructor(
 
     fun clearUpdateResult() {
         _updateResult.update { null }
+    }
+
+    fun clearDeleteAccountResult() {
+        _deleteAccountResult.update { null }
     }
 }

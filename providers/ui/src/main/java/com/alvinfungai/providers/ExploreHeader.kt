@@ -33,22 +33,28 @@ fun ExploreHeader(
         )
 
         SearchBar(
-            query = searchQuery,
-            onQueryChange = onSearchChange,
-            onSearch = { /* Handle search if needed */ },
-            active = false,
-            onActiveChange = { },
-            placeholder = { Text("Search services (e.g. Plumber)") },
-            leadingIcon = {
-                Icon(Icons.Default.Search, contentDescription = null)
-            },
-            trailingIcon = {
-                if (searchQuery.isNotEmpty()) {
-                    IconButton(onClick = { onSearchChange("") }) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear search")
+            inputField = {
+                SearchBarDefaults.InputField(
+                    query = searchQuery,
+                    onQueryChange = onSearchChange,
+                    onSearch = { /* Handle search if needed */ },
+                    expanded = false,
+                    onExpandedChange = { },
+                    placeholder = { Text("Search services (e.g. Plumber)") },
+                    leadingIcon = {
+                        Icon(Icons.Default.Search, contentDescription = null)
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { onSearchChange("") }) {
+                                Icon(Icons.Default.Clear, contentDescription = "Clear search")
+                            }
+                        }
                     }
-                }
+                )
             },
+            expanded = false,
+            onExpandedChange = { },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 12.dp),

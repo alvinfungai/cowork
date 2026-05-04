@@ -1,4 +1,4 @@
-package com.alvinfungai.cowork.navigation
+package com.alvinfungai.coworkapp.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
