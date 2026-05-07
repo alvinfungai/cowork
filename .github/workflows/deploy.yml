@@ -97,6 +97,6 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.alvinfungai.coworkapp
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
-          track: closed
+          track: alpha
           status: "completed"
           whatsNewDirectory: whatsNew/
