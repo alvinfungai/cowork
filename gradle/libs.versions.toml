@@ -31,8 +31,10 @@ supabaseVersion = "3.5.0"
 ktorVersion = "3.0.3"
 playServicesLocation = "21.3.0"
 secretsGradlePlugin = "2.0.1"
+androidxAnnotation = "1.9.1"
 
 [libraries]
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidxAnnotation" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }

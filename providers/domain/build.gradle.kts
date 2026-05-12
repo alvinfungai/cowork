@@ -21,4 +21,7 @@ dependencies {
     // Ktx Serialization
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+
+    // Annotations for ProGuard/R8
+    implementation(libs.androidx.annotation)
 }
