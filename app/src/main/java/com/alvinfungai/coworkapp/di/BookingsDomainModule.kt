@@ -1,10 +1,7 @@
-package com.alvinfungai.cowork.di
+package com.alvinfungai.coworkapp.di
 
 import com.alvinfungai.bookings.domain.repository.BookingsRepository
-import com.alvinfungai.bookings.domain.usecase.CreateBookingUseCase
-import com.alvinfungai.bookings.domain.usecase.GetBookingsForProviderUseCase
-import com.alvinfungai.bookings.domain.usecase.GetBookingsForUserUseCase
-import com.alvinfungai.bookings.domain.usecase.UpdateBookingStatusUseCase
+import com.alvinfungai.bookings.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,4 +22,16 @@ object BookingsDomainModule {
 
     @Provides
     fun provideUpdateBookingStatusUseCase(bookingsRepository: BookingsRepository) = UpdateBookingStatusUseCase(bookingsRepository)
+
+    @Provides
+    fun provideSubmitProofOfWorkUseCase(bookingsRepository: BookingsRepository) = SubmitProofOfWorkUseCase(bookingsRepository)
+
+    @Provides
+    fun provideGetProofOfWorkUseCase(bookingsRepository: BookingsRepository) = GetProofOfWorkUseCase(bookingsRepository)
+
+    @Provides
+    fun provideGetPendingProofOfWorksUseCase(bookingsRepository: BookingsRepository) = GetPendingProofOfWorksUseCase(bookingsRepository)
+
+    @Provides
+    fun provideVerifyProofOfWorkUseCase(bookingsRepository: BookingsRepository) = VerifyProofOfWorkUseCase(bookingsRepository)
 }

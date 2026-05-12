@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
@@ -27,6 +28,7 @@ import kotlin.math.ceil
 @Composable
 fun ProviderBookingsScreen(
     onBackClick: () -> Unit,
+    onViewProof: (String) -> Unit,
     viewModel: ProviderBookingsViewModel = hiltViewModel()
 ) {
     val bookingsResult by viewModel.bookings.collectAsState()
@@ -96,7 +98,8 @@ fun ProviderBookingsScreen(
                                     onAccept = { viewModel.acceptBooking(booking.id) },
                                     onReject = { viewModel.rejectBooking(booking.id) },
                                     onStart = { viewModel.startBooking(booking.id) },
-                                    onComplete = { viewModel.completeBooking(booking.id) }
+                                    onComplete = { viewModel.completeBooking(booking.id) },
+                                    onViewProof = { onViewProof(booking.id) }
                                 )
                             }
                         }
@@ -117,7 +120,8 @@ fun ProviderBookingItem(
     onAccept: () -> Unit,
     onReject: () -> Unit,
     onStart: () -> Unit,
-    onComplete: () -> Unit
+    onComplete: () -> Unit,
+    onViewProof: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -243,50 +247,59 @@ fun ProviderBookingItem(
                 }
             }
 
-            if (booking.status == BookingStatus.PENDING || booking.status == BookingStatus.ACCEPTED || booking.status == BookingStatus.STARTED) {
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                when (booking.status) {
-                    BookingStatus.PENDING -> {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            when (booking.status) {
+                BookingStatus.PENDING -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = onReject,
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
                         ) {
-                            OutlinedButton(
-                                onClick = onReject,
-                                modifier = Modifier.weight(1f),
-                                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                            ) {
-                                Text("Decline")
-                            }
-                            Button(
-                                onClick = onAccept,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text("Accept")
-                            }
+                            Text("Decline")
                         }
-                    }
-                    BookingStatus.ACCEPTED -> {
                         Button(
-                            onClick = onStart,
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+                            onClick = onAccept,
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Text("Start Job")
+                            Text("Accept")
                         }
                     }
-                    BookingStatus.STARTED -> {
-                        Button(
-                            onClick = onComplete,
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
-                        ) {
-                            Text("Mark as Completed")
-                        }
-                    }
-                    else -> {}
                 }
+                BookingStatus.ACCEPTED -> {
+                    Button(
+                        onClick = onStart,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+                    ) {
+                        Text("Start Job")
+                    }
+                }
+                BookingStatus.STARTED -> {
+                    Button(
+                        onClick = onComplete,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                    ) {
+                        Text("Mark as Completed")
+                    }
+                }
+                BookingStatus.COMPLETED -> {
+                    OutlinedButton(
+                        onClick = onViewProof,
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(8.dp)
+                    ) {
+                        Icon(Icons.Default.Assignment, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(if (booking.proofOfWorkId == null) "Submit Proof of Work" else "View Proof Status")
+                    }
+                }
+                else -> {}
             }
         }
     }

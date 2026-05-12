@@ -1,6 +1,7 @@
 package com.alvinfungai.providers.domain.repository
 
 import com.alvinfungai.providers.domain.model.ServiceProvider
+import com.alvinfungai.providers.domain.model.WorkHistory
 import kotlinx.coroutines.flow.Flow
 
 interface ServiceProvidersRepository {
@@ -18,4 +19,6 @@ interface ServiceProvidersRepository {
     fun registerServiceProvider(provider: ServiceProvider): Flow<Result<Unit>>
     fun updateLastActive(userId: String): Flow<Result<Unit>>
     fun updateProviderRating(userId: String, ratingAvg: Double, ratingCount: Int): Flow<Result<Unit>>
+    
+    fun getWorkHistory(providerId: String): Flow<Result<List<WorkHistory>>>
 }

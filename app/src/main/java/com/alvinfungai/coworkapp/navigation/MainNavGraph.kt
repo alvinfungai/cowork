@@ -1,16 +1,11 @@
 package com.alvinfungai.coworkapp.navigation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -18,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
@@ -36,6 +30,8 @@ import com.alvinfungai.bookings.BookingScreen
 import com.alvinfungai.bookings.CreateBookingScreen
 import com.alvinfungai.bookings.ProviderBookingsScreen
 import com.alvinfungai.bookings.ProviderDashboardScreen
+import com.alvinfungai.bookings.ProofOfWorkScreen
+import com.alvinfungai.bookings.ModeratorDashboardScreen
 import com.alvinfungai.providers.ExploreRoute
 import com.alvinfungai.providers.NotificationsScreen
 import com.alvinfungai.providers.ProviderSettingsScreen
@@ -82,6 +78,9 @@ object MainNavGraph : BaseNavGraph {
         @Serializable data object ManageWorkRequests : Destination
         @Serializable data object Notifications : Destination
         @Serializable data object ProviderSettings : Destination
+        
+        @Serializable data class ProofOfWork(val bookingId: String) : Destination
+        @Serializable data object ModeratorDashboard : Destination
     }
 
     override fun build(
@@ -181,7 +180,10 @@ object MainNavGraph : BaseNavGraph {
 
             composable<Destination.ManageWorkRequests> {
                 ProviderBookingsScreen(
-                    onBackClick = { navController.popBackStack() }
+                    onBackClick = { navController.popBackStack() },
+                    onViewProof = { bookingId ->
+                        navController.navigate(Destination.ProofOfWork(bookingId))
+                    }
                 )
             }
 
@@ -201,6 +203,20 @@ object MainNavGraph : BaseNavGraph {
                 EditProfileScreen(
                     onBackClick = { navController.popBackStack() },
                     onProfileUpdated = { navController.popBackStack() }
+                )
+            }
+
+            composable<Destination.ProofOfWork> { backStackEntry ->
+                val args = backStackEntry.toRoute<Destination.ProofOfWork>()
+                ProofOfWorkScreen(
+                    bookingId = args.bookingId,
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            composable<Destination.ModeratorDashboard> {
+                ModeratorDashboardScreen(
+                    onBackClick = { navController.popBackStack() }
                 )
             }
         }
@@ -311,6 +327,9 @@ object MainNavGraph : BaseNavGraph {
                         },
                         onProviderDashboardClick = {
                             parentNavController.navigate(Destination.ProviderDashboard)
+                        },
+                        onModeratorDashboardClick = {
+                            parentNavController.navigate(Destination.ModeratorDashboard)
                         },
                         onEditProfileClick = {
                             parentNavController.navigate(Destination.EditProfile)

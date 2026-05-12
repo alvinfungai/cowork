@@ -71,6 +71,7 @@ fun ServiceProviderDetailsScreen(
     viewModel: ServiceProviderDetailsViewModel = hiltViewModel()
 ) {
     val providerResult by viewModel.provider.collectAsState()
+    val workHistory by viewModel.workHistory.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val currentUserId by viewModel.currentUserId.collectAsState()
 
@@ -105,6 +106,7 @@ fun ServiceProviderDetailsScreen(
                 providerResult?.onSuccess { provider ->
                     ProviderDetailsContent(
                         provider = provider,
+                        workHistory = workHistory,
                         currentUserId = currentUserId,
                         onBookClick = onBookClick,
                         onViewReviewsClick = onViewReviewsClick,
@@ -126,6 +128,7 @@ fun ServiceProviderDetailsScreen(
 @Composable
 fun ProviderDetailsContent(
     provider: ServiceProvider,
+    workHistory: List<WorkHistory>,
     currentUserId: String?,
     onBookClick: (String) -> Unit,
     onViewReviewsClick: (String) -> Unit,
@@ -304,6 +307,13 @@ fun ProviderDetailsContent(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Verified Work History Section
+            WorkHistorySection(workHistory = workHistory)
 
             Spacer(modifier = Modifier.height(40.dp))
 

@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -54,11 +55,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
+import com.alvinfungai.providers.WorkHistorySection
+import com.alvinfungai.providers.domain.model.WorkHistory
 import com.alvinfungai.users.domain.model.UserProfile
 import com.alvinfungai.users.domain.model.UserRole
 
@@ -66,11 +71,13 @@ import com.alvinfungai.users.domain.model.UserRole
 @Composable
 fun ProfileScreen(
     profileResult: Result<UserProfile?>?,
+    workHistory: List<WorkHistory> = emptyList(),
     isLoading: Boolean,
     isDarkMode: Boolean,
     onThemeToggle: (Boolean) -> Unit,
     onRegisterAsServiceProvider: () -> Unit,
     onProviderDashboardClick: () -> Unit,
+    onModeratorDashboardClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onLogout: () -> Unit
 ) {
@@ -138,10 +145,12 @@ fun ProfileScreen(
                         if (profile != null) {
                             ProfileContent(
                                 profile = profile,
+                                workHistory = workHistory,
                                 isDarkMode = isDarkMode,
                                 onThemeToggle = onThemeToggle,
                                 onRegisterAsServiceProvider = onRegisterAsServiceProvider,
-                                onProviderDashboardClick = onProviderDashboardClick
+                                onProviderDashboardClick = onProviderDashboardClick,
+                                onModeratorDashboardClick = onModeratorDashboardClick
                             )
                         } else {
                             ErrorContent("Profile not found", Modifier.align(Alignment.Center))
@@ -162,10 +171,12 @@ fun ProfileScreen(
 @Composable
 fun ProfileContent(
     profile: UserProfile,
+    workHistory: List<WorkHistory>,
     isDarkMode: Boolean,
     onThemeToggle: (Boolean) -> Unit,
     onRegisterAsServiceProvider: () -> Unit,
-    onProviderDashboardClick: () -> Unit
+    onProviderDashboardClick: () -> Unit,
+    onModeratorDashboardClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -239,8 +250,27 @@ fun ProfileContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            if (profile.role == UserRole.MODERATOR || profile.role == UserRole.ADMIN) {
+                Button(
+                    onClick = onModeratorDashboardClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = MaterialTheme.shapes.large,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF4CAF50),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Icon(Icons.Default.VerifiedUser, contentDescription = null)
+                    Spacer(Modifier.width(12.dp))
+                    Text("Moderator Audit Panel", fontWeight = FontWeight.Bold)
+                }
+            }
+
             if (profile.role == UserRole.PROVIDER) {
                 Button(
                     onClick = onProviderDashboardClick,
@@ -256,7 +286,7 @@ fun ProfileContent(
                     Spacer(Modifier.width(12.dp))
                     Text("Provider Dashboard", fontWeight = FontWeight.Bold)
                 }
-            } else {
+            } else if (profile.role == UserRole.CLIENT) {
                 Button(
                     onClick = onRegisterAsServiceProvider,
                     modifier = Modifier
@@ -379,6 +409,16 @@ fun ProfileContent(
             }
         }
 
+        if (profile.role == UserRole.PROVIDER) {
+            Spacer(modifier = Modifier.height(32.dp))
+            WorkHistorySection(
+                workHistory = workHistory,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(40.dp))
     }
 }
@@ -434,4 +474,13 @@ fun ErrorContent(message: String, modifier: Modifier = Modifier) {
         color = MaterialTheme.colorScheme.error,
         modifier = modifier.padding(16.dp)
     )
+}
+
+@Composable
+fun DebugSection(viewModel: TestSamplesViewModel = hiltViewModel()) {
+    val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+
+    Button(onClick = { userId?.let { viewModel.createTestData(it) } }) {
+        Text("Generate Sample Proof of Work")
+    }
 }

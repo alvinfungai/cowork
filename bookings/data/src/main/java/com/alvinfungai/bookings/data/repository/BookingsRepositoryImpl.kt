@@ -3,6 +3,8 @@ package com.alvinfungai.bookings.data.repository
 import android.util.Log
 import com.alvinfungai.bookings.domain.model.Booking
 import com.alvinfungai.bookings.domain.model.BookingStatus
+import com.alvinfungai.bookings.domain.model.ProofOfWork
+import com.alvinfungai.bookings.domain.model.VerificationStatus
 import com.alvinfungai.bookings.domain.repository.BookingsRepository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,6 +23,7 @@ class BookingsRepositoryImpl @Inject constructor(
 
     companion object {
         private const val BOOKINGS_COLLECTION = "bookings"
+        private const val PROOF_OF_WORK_COLLECTION = "proof_of_work"
     }
 
     override fun createBooking(booking: Booking): Flow<Result<Unit>> = callbackFlow {
@@ -41,7 +44,8 @@ class BookingsRepositoryImpl @Inject constructor(
                 "location" to GeoPoint(booking.latitude ?: 0.0, booking.longitude ?: 0.0),
                 "notes" to booking.notes,
                 "status" to booking.status.name,
-                "createdAt" to booking.createdAt
+                "createdAt" to booking.createdAt,
+                "proofOfWorkId" to booking.proofOfWorkId
             )
             
             val docRef = if (booking.id.isEmpty()) {
@@ -140,6 +144,79 @@ class BookingsRepositoryImpl @Inject constructor(
         awaitClose { }
     }
 
+    override fun submitProofOfWork(proof: ProofOfWork): Flow<Result<Unit>> = callbackFlow {
+        try {
+            val docRef = firestore.collection(PROOF_OF_WORK_COLLECTION).document()
+            val proofWithId = proof.copy(id = docRef.id)
+            
+            firestore.runBatch { batch ->
+                batch.set(docRef, proofWithId)
+                batch.update(
+                    firestore.collection(BOOKINGS_COLLECTION).document(proof.bookingId),
+                    "proofOfWorkId", docRef.id
+                )
+            }.await()
+            
+            trySend(Result.success(Unit))
+        } catch (e: Exception) {
+            trySend(Result.failure(e))
+        }
+        awaitClose { }
+    }
+
+    override fun getProofOfWork(bookingId: String): Flow<Result<ProofOfWork?>> = callbackFlow {
+        val subscription = firestore.collection(PROOF_OF_WORK_COLLECTION)
+            .whereEqualTo("bookingId", bookingId)
+            .limit(1)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(Result.failure(error))
+                    return@addSnapshotListener
+                }
+                val proof = snapshot?.documents?.firstOrNull()?.let { mapDocumentToProofOfWork(it) }
+                trySend(Result.success(proof))
+            }
+        awaitClose { subscription.remove() }
+    }
+
+    override fun getPendingProofOfWorks(): Flow<Result<List<ProofOfWork>>> = callbackFlow {
+        val subscription = firestore.collection(PROOF_OF_WORK_COLLECTION)
+            .whereEqualTo("status", VerificationStatus.PENDING.name)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(Result.failure(error))
+                    return@addSnapshotListener
+                }
+                val proofs = snapshot?.documents?.mapNotNull { mapDocumentToProofOfWork(it) } ?: emptyList()
+                trySend(Result.success(proofs))
+            }
+        awaitClose { subscription.remove() }
+    }
+
+    override fun verifyProofOfWork(
+        proofId: String,
+        verifierId: String,
+        status: String,
+        notes: String?
+    ): Flow<Result<Unit>> = callbackFlow {
+        try {
+            firestore.collection(PROOF_OF_WORK_COLLECTION)
+                .document(proofId)
+                .update(
+                    mapOf(
+                        "status" to status,
+                        "verifierId" to verifierId,
+                        "verifiedAt" to System.currentTimeMillis(),
+                        "moderatorNotes" to notes
+                    )
+                ).await()
+            trySend(Result.success(Unit))
+        } catch (e: Exception) {
+            trySend(Result.failure(e))
+        }
+        awaitClose { }
+    }
+
     private fun mapDocumentToBooking(doc: DocumentSnapshot): Booking? {
         val geoPoint = doc.getGeoPoint("location")
         val statusStr = doc.getString("status") ?: BookingStatus.PENDING.name
@@ -166,7 +243,30 @@ class BookingsRepositoryImpl @Inject constructor(
             longitude = geoPoint?.longitude,
             notes = doc.getString("notes") ?: "",
             status = status,
-            createdAt = doc.getLong("createdAt") ?: 0
+            createdAt = doc.getLong("createdAt") ?: 0,
+            proofOfWorkId = doc.getString("proofOfWorkId")
+        )
+    }
+
+    private fun mapDocumentToProofOfWork(doc: DocumentSnapshot): ProofOfWork? {
+        val statusStr = doc.getString("status") ?: VerificationStatus.PENDING.name
+        val status = try {
+            VerificationStatus.valueOf(statusStr.uppercase())
+        } catch (e: Exception) {
+            VerificationStatus.PENDING
+        }
+
+        return ProofOfWork(
+            id = doc.id,
+            bookingId = doc.getString("bookingId") ?: "",
+            providerId = doc.getString("providerId") ?: "",
+            imageUrls = doc.get("imageUrls") as? List<String> ?: emptyList(),
+            description = doc.getString("description") ?: "",
+            submittedAt = doc.getLong("submittedAt") ?: 0,
+            status = status,
+            verifierId = doc.getString("verifierId"),
+            verifiedAt = doc.getLong("verifiedAt"),
+            moderatorNotes = doc.getString("moderatorNotes")
         )
     }
 }

@@ -4,9 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alvinfungai.app.core.ThemePreferences
+import com.alvinfungai.providers.domain.model.WorkHistory
 import com.alvinfungai.providers.domain.repository.ServiceProvidersRepository
+import com.alvinfungai.providers.domain.usecase.GetWorkHistoryUseCase
 import com.alvinfungai.users.domain.model.AuthUser
 import com.alvinfungai.users.domain.model.UserProfile
+import com.alvinfungai.users.domain.model.UserRole
 import com.alvinfungai.users.domain.repository.UserRepository
 import com.alvinfungai.users.domain.usecase.GetCurrentUserUseCase
 import com.alvinfungai.users.domain.usecase.GetUserProfileUseCase
@@ -34,6 +37,7 @@ class UserViewModel @Inject constructor(
     private val updateProfileUseCase: UpdateProfileUseCase,
     private val userRepository: UserRepository,
     private val serviceProvidersRepository: ServiceProvidersRepository,
+    private val getWorkHistoryUseCase: GetWorkHistoryUseCase,
     private val themePreferences: ThemePreferences
 ) : ViewModel() {
 
@@ -42,6 +46,9 @@ class UserViewModel @Inject constructor(
 
     private val _profile = MutableStateFlow<Result<UserProfile>?>(null)
     val profile = _profile.asStateFlow()
+
+    private val _workHistory = MutableStateFlow<List<WorkHistory>>(emptyList())
+    val workHistory = _workHistory.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -65,20 +72,42 @@ class UserViewModel @Inject constructor(
     fun loadCurrentProfile() {
         val uid = user.value?.uid ?: return
 
-        Log.d("UserViewModel", "loadCurrentProfile: $uid")
+        Log.d("COWORK_DEBUG", "UserVM: loadCurrentProfile for uid: $uid")
 
         getUserProfileUseCase(uid)
             .flowOn(Dispatchers.IO)
             .onStart { _isLoading.update { true } }
             .onEach { result ->
-                Log.d("UserViewModel", "loadCurrentProfile: $result")
+                Log.d("COWORK_DEBUG", "UserVM: getUserProfile result: $result")
                 _isLoading.update { false }
-                _profile.update { result as Result<UserProfile>? }
+                
+                val mappedResult = result.mapCatching { it ?: throw Exception("Profile not found") }
+                _profile.update { mappedResult }
+                
+                mappedResult.onSuccess { userProfile ->
+                    if (userProfile.role == UserRole.PROVIDER) {
+                        loadWorkHistory(userProfile.uid)
+                    }
+                }
             }
             .catch { error ->
                 _isLoading.update { false }
                 _profile.update { Result.failure(error) }
             }.launchIn(viewModelScope)
+    }
+
+    private fun loadWorkHistory(userId: String) {
+        Log.d("COWORK_DEBUG", "UserVM: loadWorkHistory for userId: $userId")
+        getWorkHistoryUseCase(userId)
+            .onEach { result ->
+                result.onSuccess { history ->
+                    Log.d("COWORK_DEBUG", "UserVM: loadWorkHistory success, items: ${history.size}")
+                    _workHistory.update { history }
+                }.onFailure { error ->
+                    Log.e("COWORK_DEBUG", "UserVM: loadWorkHistory error: ${error.message}")
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun updateProfile(profile: UserProfile, imageBytes: ByteArray? = null) {

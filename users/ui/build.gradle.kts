@@ -38,6 +38,7 @@ dependencies {
 
     implementation(project(":users:domain"))
     implementation(project(":providers:domain"))
+    implementation(project(":providers:ui"))
     implementation(project(":app:core"))
 
     implementation(libs.androidx.core.ktx)
@@ -69,5 +70,10 @@ dependencies {
 
     // Material Symbols
     implementation(libs.androidx.compose.material.icons.extended)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
 
 }

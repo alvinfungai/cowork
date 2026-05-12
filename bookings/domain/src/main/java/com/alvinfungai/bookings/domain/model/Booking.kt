@@ -17,7 +17,8 @@ data class Booking(
     val longitude: Double? = null,
     val notes: String = "",
     val status: BookingStatus = BookingStatus.PENDING,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val proofOfWorkId: String? = null
 )
 
 enum class BookingStatus {

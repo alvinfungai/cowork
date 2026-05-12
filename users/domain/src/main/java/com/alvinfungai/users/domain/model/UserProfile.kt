@@ -20,5 +20,6 @@ data class UserProfile(
 enum class UserRole {
     CLIENT,
     PROVIDER,
+    MODERATOR,
     ADMIN
 }

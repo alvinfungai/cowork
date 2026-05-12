@@ -75,6 +75,7 @@ class UserRepositoryImpl @Inject constructor(
                         val role = when (roleStr) {
                             "CUSTOMER", "CLIENT" -> UserRole.CLIENT
                             "PROVIDER" -> UserRole.PROVIDER
+                            "MODERATOR" -> UserRole.MODERATOR
                             "ADMIN" -> UserRole.ADMIN
                             else -> UserRole.CLIENT
                         }

@@ -4,16 +4,7 @@ import com.alvinfungai.providers.data.repository.NotificationRepositoryImpl
 import com.alvinfungai.providers.data.repository.SupabaseServiceProvidersRepositoryImpl
 import com.alvinfungai.providers.domain.repository.NotificationRepository
 import com.alvinfungai.providers.domain.repository.ServiceProvidersRepository
-import com.alvinfungai.providers.domain.usecase.GetNotificationsUseCase
-import com.alvinfungai.providers.domain.usecase.GetServiceProviderByUserIdUseCase
-import com.alvinfungai.providers.domain.usecase.GetServiceProviderDetailsUseCase
-import com.alvinfungai.providers.domain.usecase.GetServiceProvidersUseCase
-import com.alvinfungai.providers.domain.usecase.MarkNotificationAsReadUseCase
-import com.alvinfungai.providers.domain.usecase.RegisterServiceProviderUseCase
-import com.alvinfungai.providers.domain.usecase.SaveNotificationUseCase
-import com.alvinfungai.providers.domain.usecase.UpdateProviderLastActiveUseCase
-import com.alvinfungai.providers.domain.usecase.UpdateProviderRatingUseCase
-import com.alvinfungai.providers.domain.usecase.UpdateServiceProviderUseCase
+import com.alvinfungai.providers.domain.usecase.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import io.github.jan.supabase.SupabaseClient
@@ -29,9 +20,10 @@ object ServiceProvidersModule {
     @Provides
     fun provideServicesProvidersRepository(
         supabaseClient: SupabaseClient,
-        firebaseAuth: FirebaseAuth
+        firebaseAuth: FirebaseAuth,
+        firestore: FirebaseFirestore
     ): ServiceProvidersRepository {
-        return SupabaseServiceProvidersRepositoryImpl(supabaseClient, firebaseAuth)
+        return SupabaseServiceProvidersRepositoryImpl(supabaseClient, firebaseAuth, firestore)
     }
 
     @Provides
@@ -84,9 +76,13 @@ object ServiceProvidersModule {
         return UpdateProviderRatingUseCase(repository)
     }
 
-
     @Provides
     fun provideSaveNotificationUseCase(repository: NotificationRepository): SaveNotificationUseCase {
         return SaveNotificationUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetWorkHistoryUseCase(repository: ServiceProvidersRepository): GetWorkHistoryUseCase {
+        return GetWorkHistoryUseCase(repository)
     }
 }

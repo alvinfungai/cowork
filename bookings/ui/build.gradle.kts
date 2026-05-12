@@ -61,6 +61,10 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     // Play Services Location
     implementation("com.google.android.gms:play-services-location:21.3.0")
 

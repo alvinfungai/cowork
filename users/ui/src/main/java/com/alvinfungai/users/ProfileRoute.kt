@@ -17,11 +17,13 @@ fun ProfileRoute(
     viewModel: UserViewModel = hiltViewModel(),
     onRegisterAsServiceProvider: () -> Unit,
     onProviderDashboardClick: () -> Unit,
+    onModeratorDashboardClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onLogout: () -> Unit
 ) {
     // 1. Listen to the flows from the ViewModel with lifecycle awareness
     val profileResult by viewModel.profile.collectAsStateWithLifecycle()
+    val workHistory by viewModel.workHistory.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     
     // 2. Local theme preference
@@ -36,6 +38,7 @@ fun ProfileRoute(
     // 4. Pass the data down to the stateless Screen
     ProfileScreen(
         profileResult = profileResult,
+        workHistory = workHistory,
         isLoading = isLoading,
         isDarkMode = isDarkMode,
         onThemeToggle = { isDark ->
@@ -43,6 +46,7 @@ fun ProfileRoute(
         },
         onRegisterAsServiceProvider = onRegisterAsServiceProvider,
         onProviderDashboardClick = onProviderDashboardClick,
+        onModeratorDashboardClick = onModeratorDashboardClick,
         onEditProfileClick = onEditProfileClick,
         onLogout = onLogout
     )
